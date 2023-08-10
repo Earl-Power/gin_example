@@ -8,12 +8,16 @@ import (
 )
 
 func main() {
+
 	router := gin.Default()
 	router.GET("/test", func(context *gin.Context) {
 		context.JSON(200, gin.H{
 			"message": "test",
 		})
 	})
+
+	// Group Routers
+	//routerInit := routers.InitRouter()
 
 	s := &http.Server{
 		Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
