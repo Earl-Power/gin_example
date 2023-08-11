@@ -70,6 +70,29 @@ func AddTag(c *gin.Context) {
 
 }
 
+// DeleteTag Delete Tag
+func DeleteTag(c *gin.Context) {
+	id := com.StrTo(c.Param("id")).MustInt()
+
+	valid := validation.Validation{}
+	valid.Min(id, 1, "id").Message("ID必须大于0")
+
+	code := e.INVALID_PARAMS
+	if !valid.HasErrors() {
+		code = e.SUCCESS
+		if models.ExistTagByID(id) {
+			models.DeleteTag(id)
+		} else {
+			code = e.ERROR_NOT_EXIST_TAG
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"msg":  e.GetMsg(code),
+		"data": make(map[string]string),
+	})
+}
+
 // EditTag edit a tag
 func EditTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
@@ -100,29 +123,6 @@ func EditTag(c *gin.Context) {
 				data["state"] = state
 			}
 			models.EditTag(id, data)
-		} else {
-			code = e.ERROR_NOT_EXIST_TAG
-		}
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]string),
-	})
-}
-
-// DeleteTag Delete Tag
-func DeleteTag(c *gin.Context) {
-	id := com.StrTo(c.Param("id")).MustInt()
-
-	valid := validation.Validation{}
-	valid.Min(id, 1, "id").Message("ID必须大于0")
-
-	code := e.INVALID_PARAMS
-	if !valid.HasErrors() {
-		code = e.SUCCESS
-		if models.ExistTagByID(id) {
-			models.DeleteTag(id)
 		} else {
 			code = e.ERROR_NOT_EXIST_TAG
 		}
