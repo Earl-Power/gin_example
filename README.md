@@ -11,3 +11,19 @@
     routers 路由逻辑处理<br>
     runtime：应用运行时数据<br>
 </div>
+``
+version: '3.3'
+services:
+  database:
+    image: amp:1.0.0
+    container_name: amp-go
+    restart: always
+    ports:
+      - '9000:9000'
+    expose:
+      - '9000'
+networks:
+  default:
+    external:
+      name: mysql_default
+``
